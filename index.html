@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup Form</title>
+</head>
+<body>
+  <h1>Signup Form</h1>
+  <form id="signupForm">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required><br><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <input type="submit" value="Sign Up">
+  </form>
+
+  <script>
+    // JavaScript for handling form submission and interacting with GitHub API
+
+document.getElementById('signupForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  // Collect form data
+  const username = document.getElementById('username').value;
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  // User data to be uploaded to GitHub
+  const userData = {
+    username: username,
+    email: email,
+    password: password
+  };
+
+  // GitHub API settings
+  const token = 'YOUR_GITHUB_PERSONAL_ACCESS_TOKEN'; // Replace with your GitHub token
+  const repoOwner = 'YOUR_GITHUB_USERNAME'; // Replace with your GitHub username
+  const repoName = 'YOUR_REPOSITORY_NAME'; // Replace with your GitHub repo name
+  const fileName = 'user_data.json'; // The file where user data will be stored
+
+  const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${fileName}`;
+
+  // Convert the user data to base64 encoding (GitHub requires base64 for file content)
+  const encodedData = btoa(JSON.stringify(userData));
+
+  // API request to GitHub to upload the file
+  fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `token ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      message: 'Add new user data',
+      content: encodedData
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.content) {
+      alert('Signup successful! Your data has been stored on GitHub.');
+    } else {
+      alert('Error: ' + data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('An error occurred while storing user data.');
+  });
+});
+
+  </script>
+</body>
+</html>
