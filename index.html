@@ -3,31 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Form Submission">
-  <title>Form Submission</title>
+  <title>Sign-Up Form</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-  <form name="contact" method="POST" data-netlify="true" class="bg-white p-6 rounded-lg shadow-md max-w-md w-full">
-    <h2 class="text-2xl font-bold mb-4 text-center">Contact Us</h2>
-    <div class="mb-4">
-      <input type="text" name="name" placeholder="Your Name" required class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-    </div>
-    <div class="mb-4">
-      <input type="email" name="email" placeholder="Your Email" required class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-    </div>
-    <div class="mb-4">
-      <textarea name="message" placeholder="Your Message" rows="5" required class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-    </div>
-    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">Submit</button>
-  </form>
-
-  <script>
-    document.querySelector('form').addEventListener('submit', function(event) {
-      alert('Form submitted successfully!');
-    });
-  </script>
+  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-4">Sign Up</h2>
+    <form name="signup-form" method="POST" data-netlify="true">
+      <input type="hidden" name="form-name" value="signup-form" />
+      <div class="mb-4">
+        <label class="block mb-1">Full Name</label>
+        <input type="text" name="name" required class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div class="mb-4">
+        <label class="block mb-1">Email</label>
+        <input type="email" name="email" required class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div class="mb-4">
+        <label class="block mb-1">Password</label>
+        <input type="password" name="password" required class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Sign Up</button>
+    </form>
+  </div>
 </body>
 </html>
