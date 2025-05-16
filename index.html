@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>যোগাযোগ ফর্ম</title>
+  <title>সাইন আপ ফর্ম</title>
   <style>
     body {
       font-family: sans-serif;
@@ -23,7 +23,7 @@
       margin-top: 1rem;
       font-weight: bold;
     }
-    input, textarea {
+    input {
       margin-top: 0.5rem;
       padding: 0.5rem;
       font-size: 1rem;
@@ -46,21 +46,21 @@
   </style>
 </head>
 <body>
-  <h1>যোগাযোগ ফর্ম</h1>
+  <h1>সাইন আপ ফর্ম</h1>
   <form action="https://formspree.io/f/mblowjko" method="POST">
-    <label for="name">নাম:</label>
-    <input type="text" id="name" name="name" placeholder="আপনার নাম লিখুন" required />
+    <label for="username">নাম ব্যবহারকারী:</label>
+    <input type="text" id="username" name="username" placeholder="আপনার ব্যবহারকারীর নাম লিখুন" required />
 
     <label for="email">ইমেইল:</label>
     <input type="email" id="email" name="_replyto" placeholder="example@mail.com" required />
 
-    <label for="message">মেসেজ:</label>
-    <textarea id="message" name="message" rows="5" placeholder="আপনার বার্তা লিখুন" required></textarea>
+    <label for="password">পাসওয়ার্ড:</label>
+    <input type="password" id="password" name="password" placeholder="পাসওয়ার্ড লিখুন" required />
 
-    <!-- সাবমিশনের পর রিডাইরেক্ট করতে চান? তাহলে নিচের লাইন আনকমেন্ট করে আপনার থ্যাঙ্ক-ইউ পেজ URL দিন -->
-    <!-- <input type="hidden" name="_next" value="https://yourdomain.com/thank-you.html" /> -->
+    <label for="confirm-password">পাসওয়ার্ড নিশ্চিত করুন:</label>
+    <input type="password" id="confirm-password" name="confirm_password" placeholder="আবার পাসওয়ার্ড লিখুন" required />
 
-    <button type="submit">সাবমিট</button>
+    <button type="submit">সাইন আপ</button>
   </form>
 </body>
 </html>
