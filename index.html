@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>যোগাযোগ ফর্ম</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      line-height: 1.6;
+    }
+    h1 {
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    input, textarea {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      margin-top: 1.5rem;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 4px;
+      background-color: #0070f3;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005ec2;
+    }
+  </style>
+</head>
+<body>
+  <h1>যোগাযোগ ফর্ম</h1>
+  <form action="https://formspree.io/f/mblowjko" method="POST">
+    <label for="name">নাম:</label>
+    <input type="text" id="name" name="name" placeholder="আপনার নাম লিখুন" required />
+
+    <label for="email">ইমেইল:</label>
+    <input type="email" id="email" name="_replyto" placeholder="example@mail.com" required />
+
+    <label for="message">মেসেজ:</label>
+    <textarea id="message" name="message" rows="5" placeholder="আপনার বার্তা লিখুন" required></textarea>
+
+    <!-- সাবমিশনের পর রিডাইরেক্ট করতে চান? তাহলে নিচের লাইন আনকমেন্ট করে আপনার থ্যাঙ্ক-ইউ পেজ URL দিন -->
+    <!-- <input type="hidden" name="_next" value="https://yourdomain.com/thank-you.html" /> -->
+
+    <button type="submit">সাবমিট</button>
+  </form>
+</body>
+</html>
