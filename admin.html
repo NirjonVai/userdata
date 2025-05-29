@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <title>Admin Panel</title>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-6xl mx-auto bg-white p-6 rounded shadow-md">
+    <h1 class="text-3xl font-bold mb-6">Admin Panel</h1>
+    <button id="logoutBtn" class="mb-6 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Logout</button>
+
+    <table class="w-full border-collapse mb-6" id="usersTable">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="border p-2">UID</th>
+          <th class="border p-2">Username</th>
+          <th class="border p-2">Email</th>
+          <th class="border p-2">Phone</th>
+          <th class="border p-2">Balance</th>
+          <th class="border p-2">Role</th>
+          <th class="border p-2">Referral Code</th>
+          <th class="border p-2">Referred By</th>
+          <th class="border p-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="usersBody"></tbody>
+    </table>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCkYWvYNsg2-CR88Js6gcP2nXfvwI4TW30",
+      authDomain: "bdwork-346d3.firebaseapp.com",
+      projectId: "bdwork-346d3",
+      storageBucket: "bdwork-346d3.firebasestorage.app",
+      messagingSenderId: "900963179093",
+      appId: "1:900963179093:web:81e42d67bb31d603cc92dc",
+      measurementId: "G-FM1YJ8E5GK"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const usersBody = document.getElementById("usersBody");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        alert("User data not found");
+        await signOut(auth);
+        window.location.href = "login.html";
+        return;
+      }
+
+      const userData = userSnap.data();
+      if (userData.role !== "admin") {
+        alert("Access denied. Admins only.");
+        await signOut(auth);
+        window.location.href = "login.html";
+        return;
+      }
+
+      loadUsers();
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "login.html";
+    });
+
+    async function loadUsers() {
+      usersBody.innerHTML = "";
+      const querySnapshot = await getDocs(collection(db, "users"));
+      querySnapshot.forEach((docSnap) => {
+        const user = docSnap.data();
+        const tr = document.createElement("tr");
+        tr.classList.add("border-b");
+
+        tr.innerHTML = `
+          <td class="border p-2 break-words max-w-xs">${docSnap.id}</td>
+          <td class="border p-2"><input type="text" value="${user.username || ''}" data-id="${docSnap.id}" data-field="username" class="w-full" /></td>
+          <td class="border p-2"><input type="email" value="${user.email || ''}" data-id="${docSnap.id}" data-field="email" class="w-full" /></td>
+          <td class="border p-2"><input type="tel" value="${user.phone || ''}" data-id="${docSnap.id}" data-field="phone" class="w-full" /></td>
+          <td class="border p-2"><input type="text" value="${user.balance || 0}" data-id="${docSnap.id}" data-field="balance" class="w-full" /></td>
+          <td class="border p-2">
+            <select data-id="${docSnap.id}" data-field="role" class="w-full">
+              <option value="user" ${user.role === "user" ? "selected" : ""}>User</option>
+              <option value="admin" ${user.role === "admin" ? "selected" : ""}>Admin</option>
+            </select>
+          </td>
+          <td class="border p-2"><input type="text" value="${user.referralCode || ''}" data-id="${docSnap.id}" data-field="referralCode" class="w-full" /></td>
+          <td class="border p-2"><input type="text" value="${user.referredBy || ''}" data-id="${docSnap.id}" data-field="referredBy" class="w-full" /></td>
+          <td class="border p-2 text-center">
+            <button data-id="${docSnap.id}" class="saveBtn bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700">Save</button>
+          </td>
+        `;
+
+        usersBody.appendChild(tr);
+      });
+
+      // Add event listeners for Save buttons
+      document.querySelectorAll(".saveBtn").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const uid = btn.getAttribute("data-id");
+          const tr = btn.closest("tr");
+          const inputs = tr.querySelectorAll("input, select");
+          let updatedData = {};
+
+          inputs.forEach((input) => {
+            const field = input.getAttribute("data-field");
+            if(field){
+              let val = input.value;
+              if(field === "balance") val = Number(val);
+              updatedData[field] = val;
+            }
+          });
+
+          try {
+            await updateDoc(doc(db, "users", uid), updatedData);
+            alert("User data updated");
+          } catch (err) {
+            alert("Error updating user: " + err.message);
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>
