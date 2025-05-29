@@ -1,54 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login & Sign Up</title>
 
-  <!-- TailwindCSS + FontAwesome -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <!-- TailwindCSS + FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
 </head>
-<body class="flex items-center justify-center h-screen bg-gray-100">
-  <div class="w-full max-w-sm bg-white p-6 rounded shadow-md">
-    <h2 class="text-2xl font-bold text-center mb-4">Login</h2>
-    <input type="email" id="loginEmail" placeholder="Email" class="w-full mb-3 px-4 py-2 border rounded" />
-    <input type="password" id="loginPassword" placeholder="Password" class="w-full mb-3 px-4 py-2 border rounded" />
-    <button onclick="login()" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Login</button>
-    <p class="text-center text-sm mt-3">Don't have an account? <a href="signup.html" class="text-blue-500">Sign up</a></p>
-  </div>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  <div class="w-full max-w-md bg-white p-6 rounded-xl shadow-lg space-y-6">
+    <!-- Login Form -->
+    <form id="loginForm" class="space-y-4">
+      <h2 class="text-2xl font-bold text-center">Login</h2>
+      <input type="email" id="loginEmail" placeholder="Email" required class="w-full p-2 border rounded" />
+      <input type="password" id="loginPassword" placeholder="Password" required class="w-full p-2 border rounded" />
+      <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Login</button>
+    </form>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCkYWvYNsg2-CR88Js6gcP2nXfvwI4TW30",
-      authDomain: "bdwork-346d3.firebaseapp.com",
-      projectId: "bdwork-346d3",
-      storageBucket: "bdwork-346d3.firebasestorage.app",
-      messagingSenderId: "900963179093",
-      appId: "1:900963179093:web:81e42d67bb31d603cc92dc",
-      measurementId: "G-FM1YJ8E5GK"
-    };
+    <hr class="border-gray-300" />
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    <!-- Sign-Up Form -->
+    <form id="signupForm" class="space-y-4">
+      <h2 class="text-2xl font-bold text-center">Sign Up</h2>
+      <input type="email" id="signupEmail" placeholder="Email" required class="w-full p-2 border rounded" />
+      <input type="password" id="signupPassword" placeholder="Password" required class="w-full p-2 border rounded" />
+      <button type="submit" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">Sign Up</button>
+    </form>
+  </div>
 
-    window.login = function () {
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
+  <!-- Firebase Config & Auth Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          alert("Login successful!");
-          window.location.href = "dashboard.html";
-        })
-        .catch((error) => {
-          alert("Login failed: " + error.message);
-        });
-    };
-  </script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCkYWvYNsg2-CR88Js6gcP2nXfvwI4TW30",
+      authDomain: "bdwork-346d3.firebaseapp.com",
+      projectId: "bdwork-346d3",
+      storageBucket: "bdwork-346d3.appspot.com",
+      messagingSenderId: "900963179093",
+      appId: "1:900963179093:web:81e42d67bb31d603cc92dc",
+      measurementId: "G-FM1YJ8E5GK"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Login Handler
+    document.getElementById("loginForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          alert("Login Successful!");
+          // Redirect or handle success
+        })
+        .catch((error) => {
+          alert("Login Failed: " + error.message);
+        });
+    });
+
+    // Sign-Up Handler
+    document.getElementById("signupForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          alert("Account Created Successfully!");
+          // Redirect or handle success
+        })
+        .catch((error) => {
+          alert("Sign Up Failed: " + error.message);
+        });
+    });
+  </script>
 </body>
 </html>
